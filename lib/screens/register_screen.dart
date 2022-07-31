@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:chat_app/widgets/boton_azul.dart';
 import 'package:chat_app/widgets/custom_input.dart';
+import 'package:provider/provider.dart';
+
+import '../helpers/mostrar_alerta.dart';
+import '../services/auth_service.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -78,14 +82,34 @@ class _FormularioState extends State<_Formulario> {
             textController: passController,
             isPassword: true,
           ),
-          BotonAzul(onPressed: _onPress, text: 'Ingresen'),
+          BotonAzul(
+              onPressed:
+                  Provider.of<AuthService>(context, listen: true).autenticando
+                      ? null
+                      : _onPress,
+              text: 'Ingresen'),
         ],
       ),
     );
   }
 
-  _onPress() {
+  _onPress() async {
+    FocusScope.of(context).unfocus();
+    print(nameController.text);
     print(emailController.text);
     print(passController.text);
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final registroOk = await authService.register(nameController.text.trim(),
+        emailController.text.trim(), passController.text.trim());
+
+    if (registroOk) {
+      Navigator.of(context).pushReplacementNamed('usuarios');
+    } else {
+      //mostrar alerta
+      mostrarAlerta(
+          context: context,
+          titulo: 'Credenciales incorrectas',
+          subtitulo: 'Revisen sus credenciales');
+    }
   }
 }

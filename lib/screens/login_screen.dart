@@ -1,8 +1,11 @@
+import 'package:chat_app/helpers/mostrar_alerta.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:chat_app/widgets/boton_azul.dart';
 import 'package:chat_app/widgets/custom_input.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -71,14 +74,32 @@ class _FormularioState extends State<_Formulario> {
             textController: passController,
             isPassword: true,
           ),
-          BotonAzul(onPressed: _onPress, text: 'Ingresen'),
+          BotonAzul(
+              onPressed:
+                  Provider.of<AuthService>(context, listen: true).autenticando
+                      ? null
+                      : _onPress,
+              text: 'Ingresen'),
         ],
       ),
     );
   }
 
-  _onPress() {
-    print(emailController.text);
-    print(passController.text);
+  _onPress() async {
+    FocusScope.of(context).unfocus();
+
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final loginOk = await authService.login(
+        emailController.text.trim(), passController.text.trim());
+
+    if (loginOk) {
+      Navigator.of(context).pushReplacementNamed('usuarios');
+    } else {
+      //mostrar alerta
+      mostrarAlerta(
+          context: context,
+          titulo: 'Login incorrecto',
+          subtitulo: 'Revisen sus credenciales');
+    }
   }
 }
