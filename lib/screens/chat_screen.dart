@@ -25,7 +25,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   late SocketService socketService;
   late AuthService authService;
 
-  List<ChatMessage> _menssages = [];
+  List<ChatMessage> menssages = [];
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           ..forward()));
 
     setState(() {
-      _menssages.insertAll(0, history);
+      menssages.insertAll(0, history);
     });
   }
 
@@ -65,7 +65,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
 
     setState(() {
-      _menssages.insert(0, message);
+      menssages.insert(0, message);
     });
 
     message.animationController.forward();
@@ -104,8 +104,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         children: [
           Flexible(
             child: ListView.builder(
-              itemCount: _menssages.length,
-              itemBuilder: (_, i) => _menssages[i],
+              itemCount: menssages.length,
+              itemBuilder: (_, i) => menssages[i],
               physics: const BouncingScrollPhysics(),
               reverse: true,
             ),
@@ -191,7 +191,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 200),
       ),
     );
-    _menssages.insert(0, newMessage);
+    menssages.insert(0, newMessage);
     newMessage.animationController.forward();
 
     setState(() {
@@ -207,7 +207,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    for (ChatMessage message in _menssages) {
+    for (ChatMessage message in menssages) {
       message.animationController.dispose();
     }
     socketService.socket.off('mensaje-personal');

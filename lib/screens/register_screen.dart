@@ -96,9 +96,7 @@ class _FormularioState extends State<_Formulario> {
 
   _onPress() async {
     FocusScope.of(context).unfocus();
-    print(nameController.text);
-    print(emailController.text);
-    print(passController.text);
+
     final authService = Provider.of<AuthService>(context, listen: false);
     final socketService = Provider.of<SocketService>(context, listen: false);
     final registroOk = await authService.register(nameController.text.trim(),

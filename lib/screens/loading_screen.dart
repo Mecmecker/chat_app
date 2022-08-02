@@ -31,7 +31,6 @@ class LoadingScreen extends StatelessWidget {
     final autenticado = await authService.isLogIn();
 
     if (autenticado) {
-      //TODO:conectar la socket server
       socketService.connect();
       Navigator.of(context).pushReplacement(PageRouteBuilder(
           pageBuilder: ((_, __, ___) => const UsuariosScreen()),
