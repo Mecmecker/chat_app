@@ -1,3 +1,4 @@
+import 'package:chat_app/services/socket_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chat_app/widgets/widgets.dart';
@@ -99,10 +100,12 @@ class _FormularioState extends State<_Formulario> {
     print(emailController.text);
     print(passController.text);
     final authService = Provider.of<AuthService>(context, listen: false);
+    final socketService = Provider.of<SocketService>(context, listen: false);
     final registroOk = await authService.register(nameController.text.trim(),
         emailController.text.trim(), passController.text.trim());
 
     if (registroOk) {
+      socketService.connect();
       Navigator.of(context).pushReplacementNamed('usuarios');
     } else {
       //mostrar alerta
